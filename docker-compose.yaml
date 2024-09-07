@@ -1,0 +1,32 @@
+version: "3"
+services:
+    client:
+        container_name: react
+        restart: always
+        build: ./services/client
+        ports:
+        - 3000:3000
+        volumes: 
+        - ./services/client:/app     
+        - ./services/client/error.log:/usr/src/app/error.log
+        links:
+        - api
+    api:
+        container_name: nodejs
+        build: ./services/api
+        restart: always
+        ports:
+        - 3010:3010
+        volumes:
+        - ./services/api:/app
+        - ./services/api/error.log:/usr/src/app/error.log
+        links:
+        - mongo             
+    mongo:
+        container_name: mongo
+        image: mongo
+        restart: always        
+        ports:
+        - 27018:27017
+        volumes:
+        - ./services/api/data:/data/db
